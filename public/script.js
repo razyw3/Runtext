@@ -730,322 +730,178 @@ document.addEventListener("DOMContentLoaded", () => {
     if (fps > 20) {
       fps = 15; // fallback to light 15 fps limit for GIF compilation safety
     }
-// =========================
-// Running Text Generator - Refactored (No Feature Changes)
-// =========================
-
-document.addEventListener("DOMContentLoaded", () => {
-  // =========================
-  // Helpers
-  // =========================
-  const $ = (id) => document.getElementById(id);
-
-  const isHex = (v) => /^#[0-9A-F]{6}$/i.test(v);
-
-  const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
-
-  const setClass = (el, add, remove = []) => {
-    if (!el) return;
-    el.classList.add(...add);
-    el.classList.remove(...remove);
-  };
-
-  // =========================
-  // DOM
-  // =========================
-  const el = {
-    textInput: $("text-input"),
-    charCounter: $("char-counter"),
-    fontSelect: $("font-select"),
-    sizeSlider: $("size-slider"),
-    sizeValue: $("size-value"),
-    speedSlider: $("speed-slider"),
-    speedValue: $("speed-value"),
-
-    bold: $("toggle-bold"),
-    italic: $("toggle-italic"),
-    dirLeft: $("dir-left"),
-    dirRight: $("dir-right"),
-
-    textColorPicker: $("text-color-picker"),
-    textColorInput: $("text-color-input"),
-
-    bgSolid: $("bg-mode-solid"),
-    bgGradient: $("bg-mode-gradient"),
-    solidSection: $("solid-bg-section"),
-    gradientSection: $("gradient-bg-section"),
-
-    bgColorPicker: $("bg-color-picker"),
-    bgColorInput: $("bg-color-input"),
-
-    gradStartPicker: $("gradient-start-picker"),
-    gradStartInput: $("gradient-start-input"),
-    gradEndPicker: $("gradient-end-picker"),
-    gradEndInput: $("gradient-end-input"),
-
-    gradR: $("grad-dir-r"),
-    gradB: $("grad-dir-b"),
-    gradBr: $("grad-dir-br"),
-    gradRadial: $("grad-radial"),
-
-    canvas: $("preview-canvas"),
-    canvasWrap: $("preview-screen-container"),
-
-    previewBtn: $("preview-control"),
-    previewIcon: $("preview-control-icon"),
-    previewText: $("preview-control-text"),
-    fullBtn: $("preview-fullscreen"),
-
-    reset: $("btn-reset"),
-
-    codeOut: $("code-output-inspect")
-  };
-
-  const ctx = el.canvas.getContext("2d");
-
-  // =========================
-  // Config
-  // =========================
-  let config = {
-    text: "RUNNING TEXT GENERATOR ★ EASILY EXPORT HTML WIDGETS ★ SMOOTH HARDWARE ACCELERATED TEXT",
-    fontFamily: "Inter",
-    fontSize: 48,
-    speedRating: 5,
-    direction: "left",
-    bold: false,
-    italic: false,
-    textColor: "#06b6d4",
-    bgMode: "gradient",
-    bgColor: "#090d16",
-    gradientStart: "#161b33",
-    gradientEnd: "#05050d",
-    gradientType: "linear-r",
-    themePreset: "dark",
-    isAnimationPaused: false
-  };
-
-  const resolutions = {
-    "480p": { width: 854, height: 480 },
-    "720p": { width: 1280, height: 720 },
-    "1080p": { width: 1920, height: 1080 }
-  };
-
-  const speedMap = {
-    1: 30, 2: 24, 3: 18, 4: 14, 5: 11,
-    6: 8, 7: 6, 8: 4, 9: 3, 10: 2
-  };
-
-  let xOffset = 0;
-  let ledCache = null;
-
-  // =========================
-  // Background Builder (DEDUP)
-  // =========================
-  const getBackground = (cfg, ctx, w, h) => {
-    if (cfg.bgMode === "solid") {
-      ctx.fillStyle = cfg.bgColor;
-      ctx.fillRect(0, 0, w, h);
-      return;
-    }
-
-    let g;
-    const { gradientStart: a, gradientEnd: b } = cfg;
-
-    if (cfg.gradientType === "linear-r") g = ctx.createLinearGradient(0, 0, w, 0);
-    else if (cfg.gradientType === "linear-b") g = ctx.createLinearGradient(0, 0, 0, h);
-    else if (cfg.gradientType === "linear-br") g = ctx.createLinearGradient(0, 0, w, h);
-    else g = ctx.createRadialGradient(w / 2, h / 2, 5, w / 2, h / 2, Math.max(w, h) / 1.5);
-
-    g.addColorStop(0, a);
-    g.addColorStop(1, b);
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, w, h);
-  };
-
-  // =========================
-  // LED Pattern
-  // =========================
-  const getLed = (ctx) => {
-    if (ledCache) return ledCache;
-
-    const c = document.createElement("canvas");
-    c.width = c.height = 6;
-    const p = c.getContext("2d");
-
-    p.fillStyle = "rgba(10,10,15,.82)";
-    p.fillRect(0, 0, 6, 6);
-
-    p.globalCompositeOperation = "destination-out";
-    p.beginPath();
-    p.arc(3, 3, 2.3, 0, Math.PI * 2);
-    p.fill();
-
-    p.globalCompositeOperation = "source-over";
-    p.strokeStyle = "rgba(0,0,0,.9)";
-    p.lineWidth = 0.55;
-    p.stroke();
-
-    ledCache = ctx.createPattern(c, "repeat");
-    return ledCache;
-  };
-
-  // =========================
-  // Canvas Renderer
-  // =========================
-  function draw(ctx, w, h, cfg, text, update = true) {
-    getBackground(cfg, ctx, w, h);
-
-    ctx.save();
-    ctx.textBaseline = "middle";
-    ctx.textAlign = "left";
-    ctx.font = `${cfg.italic ? "italic" : "normal"} ${cfg.bold ? "bold" : "normal"} ${cfg.fontSize}px "${cfg.fontFamily}"`;
-
-    ctx.fillStyle = cfg.textColor;
-
-    const m = ctx.measureText(text);
-    const textW = m.width || text.length * cfg.fontSize * 0.6;
-    const gap = cfg.fontSize * 2.5;
-    const step = textW + gap;
-
-    const y = h / 2;
-    let x = xOffset;
-
-    if (cfg.direction === "left") {
-      while (x < w) {
-        ctx.fillText(text, x, y);
-        x += step;
-      }
-    } else {
-      while (x > -step) {
-        ctx.fillText(text, x, y);
-        x -= step;
-      }
-    }
-
-    ctx.restore();
-
-    if (cfg.themePreset === "led") {
-      const p = getLed(ctx);
-      ctx.fillStyle = p;
-      ctx.fillRect(0, 0, w, h);
-    }
-
-    if (update && !cfg.isAnimationPaused) {
-      const speed = cfg.speedRating * (w / 854) * 0.72;
-
-      if (cfg.direction === "left") {
-        xOffset -= speed;
-        if (xOffset < -step) xOffset += step;
+    
+    const dims = resolutions[resKey] || resolutions["720p"];
+    const aspect = dims.width / dims.height;
+    
+    // Scale GIF dimensions down so the client-side encoding completes in seconds
+    const gifTargetWidth = 640;
+    const gifTargetHeight = Math.round(gifTargetWidth / aspect);
+    
+    // UI Setup
+    exportProgressSection.classList.remove("hidden");
+    btnExportVideo.disabled = true;
+    btnExportGif.disabled = true;
+    exportProgressPercent.textContent = "0%";
+    exportProgressBar.style.width = "0%";
+    exportStatusLabel.textContent = "Loading Headless Frame Renderer...";
+    
+    const numFrames = duration * fps;
+    const imagesArray = [];
+    
+    // Offscreen canvas
+    const gifCanvas = document.createElement("canvas");
+    gifCanvas.width = gifTargetWidth;
+    gifCanvas.height = gifTargetHeight;
+    const gectx = gifCanvas.getContext("2d");
+    
+    // Maintain state offsets
+    const savedOffset = xOffset;
+    xOffset = 0; // Starts clean
+    
+    let currentFrameIdx = 0;
+    
+    // Frame generator loop - executes asynchronously to keep UI responsive
+    function captureNextGifFrame() {
+      drawFrame(gectx, gifTargetWidth, gifTargetHeight, config.text, {
+        ...config,
+        isAnimationPaused: false
+      }, true);
+      
+      // Store canvas jpeg frame data uri representation
+      imagesArray.push(gifCanvas.toDataURL("image/jpeg", 0.85));
+      
+      currentFrameIdx++;
+      const captureProgress = currentFrameIdx / numFrames;
+      
+      // Update progress bar (Frame Capture covers first 50%)
+      const progVal = Math.round(captureProgress * 50);
+      exportProgressPercent.textContent = `${progVal}%`;
+      exportProgressBar.style.width = `${progVal}%`;
+      exportStatusLabel.textContent = `Capturing Frame ${currentFrameIdx} / ${numFrames} (50% Rendered)`;
+      
+      if (currentFrameIdx < numFrames) {
+        requestAnimationFrame(captureNextGifFrame);
       } else {
-        xOffset += speed;
-        if (xOffset > w) xOffset -= step;
+        // Restore cursor layout offset for onscreen preview
+        xOffset = savedOffset;
+        
+        exportStatusLabel.textContent = "Verifying GIF compiler library...";
+        // Verify compiler exists, then compile
+        ensureGifshotLoaded()
+          .then(() => {
+            compileCollectedFrames();
+          })
+          .catch(err => {
+            console.error(err);
+            exportStatusLabel.textContent = err.message;
+            alert(err.message);
+            btnExportVideo.disabled = false;
+            btnExportGif.disabled = false;
+          });
       }
     }
-  }
-
-  // =========================
-  // Loop
-  // =========================
-  function loop() {
-    const dims = resolutions["720p"];
-
-    if (el.canvas.width !== dims.width || el.canvas.height !== dims.height) {
-      el.canvas.width = dims.width;
-      el.canvas.height = dims.height;
+    
+    function compileCollectedFrames() {
+      exportStatusLabel.textContent = "Compiling GIF... (Colors quantization)";
+      
+      gifshot.createGIF({
+        images: imagesArray,
+        gifWidth: gifTargetWidth,
+        gifHeight: gifTargetHeight,
+        numFrames: numFrames,
+        interval: 1 / fps,
+        progressCallback: function (quantizeProgress) {
+          // quantization is another 50%
+          const compileProgVal = 50 + Math.round(quantizeProgress * 50);
+          exportProgressPercent.textContent = `${compileProgVal}%`;
+          exportProgressBar.style.width = `${compileProgVal}%`;
+          exportStatusLabel.textContent = `Encoding and Optimizing GIF frames (${Math.round(quantizeProgress * 150)}% of step 2)...`;
+        }
+      }, function (result) {
+        if (!result.error) {
+          const downloadAnchor = document.createElement("a");
+          downloadAnchor.href = result.image;
+          downloadAnchor.download = `running-text-${resKey}.gif`;
+          document.body.appendChild(downloadAnchor);
+          downloadAnchor.click();
+          document.body.removeChild(downloadAnchor);
+        } else {
+          console.error("Gifshot failed:", result.error);
+          alert("Gagal memproses GIF: " + result.error);
+        }
+        
+        // Return states
+        btnExportVideo.disabled = false;
+        btnExportGif.disabled = false;
+        exportProgressSection.classList.add("hidden");
+      });
     }
-
-    draw(ctx, el.canvas.width, el.canvas.height, config, config.text);
-    requestAnimationFrame(loop);
+    
+    // Start asynchronous rendering loop
+    requestAnimationFrame(captureNextGifFrame);
   }
 
-  // =========================
-  // Sync UI
-  // =========================
-  function sync() {
-    el.textInput.value = config.text;
-    el.charCounter.textContent = `${config.text.length} chars`;
+  // Bind Export Buttons
+  btnExportVideo.addEventListener("click", exportToVideo);
+  btnExportGif.addEventListener("click", exportToGif);
 
-    el.fontSelect.value = config.fontFamily;
-    el.sizeSlider.value = config.fontSize;
-    el.sizeValue.textContent = `${config.fontSize}px`;
+  // --- Setting Preset Themes ---
+  presetNeonBtn.addEventListener("click", () => {
+    applyConfigChangeAndRender({
+      text: "⚡ NEON GLOW PARTY ⚡ SUPER VIBRANT ELECTRO RUNNING SCREEN ⚡",
+      fontFamily: "Syne",
+      fontSize: 55,
+      speedRating: 7,
+      textColor: "#ec4899", // Neon Pink
+      bgMode: "gradient",
+      gradientStart: "#1a0b2e", // Dark violet
+      gradientEnd: "#02010a", // Pitch black
+      gradientType: "radial",
+      themePreset: "neon",
+      bold: true,
+      italic: false
+    });
+  });
 
-    el.speedSlider.value = config.speedRating;
-    el.speedValue.textContent = `Rating: ${config.speedRating} (${speedMap[config.speedRating]}s)`;
+  presetLedBtn.addEventListener("click", () => {
+    applyConfigChangeAndRender({
+      text: "LED BILLBOARD MATRIX SCREEN [WARNING: CRITICAL EVENT AHEAD] : ",
+      fontFamily: "Press Start 2P",
+      fontSize: 26,
+      speedRating: 4,
+      textColor: "#ff3333", // Bright LED Red
+      bgMode: "solid",
+      bgColor: "#040000",
+      themePreset: "led",
+      bold: false,
+      italic: false
+    });
+  });
 
-    el.textColorPicker.value = config.textColor;
-    el.textColorInput.value = config.textColor;
+  presetDarkBtn.addEventListener("click", () => {
+    applyConfigChangeAndRender({
+      text: "Elegant Cosmopolitan Space Stream — Luxury Editorial Studio",
+      fontFamily: "Playfair Display",
+      fontSize: 48,
+      speedRating: 3,
+      textColor: "#e0e7ff", // Warm soft white
+      bgMode: "gradient",
+      gradientStart: "#0f172a",
+      gradientEnd: "#020617",
+      gradientType: "linear-br",
+      themePreset: "dark",
+      bold: false,
+      italic: true
+    });
+  });
 
-    el.bgColorPicker.value = config.bgColor;
-    el.bgColorInput.value = config.bgColor;
-
-    el.gradStartPicker.value = config.gradientStart;
-    el.gradStartInput.value = config.gradientStart;
-
-    el.gradEndPicker.value = config.gradientEnd;
-    el.gradEndInput.value = config.gradientEnd;
-
-    loadFont(config.fontFamily);
-    updateCode();
-  }
-
-  function loadFont(f) {
-    document.fonts.load(`16px "${f}"`);
-  }
-
-  // =========================
-  // Config update
-  // =========================
-  const apply = (patch) => {
-    config = { ...config, ...patch };
-    sync();
-  };
-
-  // =========================
-  // Events
-  // =========================
-  el.textInput.oninput = (e) => apply({ text: e.target.value });
-  el.fontSelect.onchange = (e) => apply({ fontFamily: e.target.value });
-  el.sizeSlider.oninput = (e) => apply({ fontSize: +e.target.value });
-  el.speedSlider.oninput = (e) => apply({ speedRating: +e.target.value });
-
-  el.bold.onclick = () => apply({ bold: !config.bold });
-  el.italic.onclick = () => apply({ italic: !config.italic });
-
-  el.dirLeft.onclick = () => apply({ direction: "left" });
-  el.dirRight.onclick = () => apply({ direction: "right" });
-
-  el.textColorPicker.oninput = (e) => apply({ textColor: e.target.value });
-
-  el.textColorInput.oninput = (e) => {
-    if (isHex(e.target.value)) apply({ textColor: e.target.value });
-  };
-
-  el.bgColorPicker.oninput = (e) => apply({ bgColor: e.target.value });
-
-  el.bgColorInput.oninput = (e) => {
-    if (isHex(e.target.value)) apply({ bgColor: e.target.value });
-  };
-
-  el.gradStartPicker.oninput = (e) => apply({ gradientStart: e.target.value });
-  el.gradStartInput.oninput = (e) => isHex(e.target.value) && apply({ gradientStart: e.target.value });
-
-  el.gradEndPicker.oninput = (e) => apply({ gradientEnd: e.target.value });
-  el.gradEndInput.oninput = (e) => isHex(e.target.value) && apply({ gradientEnd: e.target.value });
-
-  el.previewBtn.onclick = () => apply({ isAnimationPaused: !config.isAnimationPaused });
-  el.canvas.onclick = () => apply({ isAnimationPaused: !config.isAnimationPaused });
-
-  el.fullBtn.onclick = () => {
-    if (!document.fullscreenElement) {
-      el.canvasWrap.requestFullscreen();
-    } else document.exitFullscreen();
-  };
-
-  el.reset.onclick = () =>
-    apply({
+  // Reset Button
+  btnReset.addEventListener("click", () => {
+    applyConfigChangeAndRender({
       text: "RUNNING TEXT GENERATOR ★ EASILY EXPORT HTML WIDGETS ★ SMOOTH HARDWARE ACCELERATED TEXT",
       fontFamily: "Inter",
-      fontSize: 48,
+      fontSize: 42,
       speedRating: 5,
       direction: "left",
       bold: false,
@@ -1059,24 +915,220 @@ document.addEventListener("DOMContentLoaded", () => {
       themePreset: "dark",
       isAnimationPaused: false
     });
+  });
 
-  // =========================
-  // Code output (simplified but same logic)
-  // =========================
-  function updateCode() {
-    el.codeOut.textContent = `
-.marquee {
-  font-size:${config.fontSize}px;
-  color:${config.textColor};
-  font-family:${config.fontFamily};
-  animation:${config.direction === "right" ? "right" : "left"} ${speedMap[config.speedRating]}s linear infinite;
-}
-    `.trim();
+  // --- HTML Drawer Code Generator toggler ---
+  toggleRawCodeBtn.addEventListener("click", () => {
+    if (rawCodeDrawer.classList.contains("max-h-0")) {
+      rawCodeDrawer.classList.remove("max-h-0");
+      rawCodeDrawer.classList.add("max-h-96");
+      rawCodeChevron.style.transform = "rotate(180deg)";
+    } else {
+      rawCodeDrawer.classList.add("max-h-0");
+      rawCodeDrawer.classList.remove("max-h-96");
+      rawCodeChevron.style.transform = "rotate(0deg)";
+    }
+  });
+
+  // --- Standalone Self-contained HTML Exporters Builders ---
+  function getDynamicHTMLBundle() {
+    const fontUrls = {
+      "Inter": "https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap",
+      "Space Grotesk": "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap",
+      "Playfair Display": "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap",
+      "Fira Code": "https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap",
+      "Outfit": "https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap",
+      "Syne": "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap",
+      "Bungee": "https://fonts.googleapis.com/css2?family=Bungee&display=swap",
+      "Monoton": "https://fonts.googleapis.com/css2?family=Monoton&display=swap",
+      "Press Start 2P": "https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap",
+      "Unbounded": "https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&display=swap"
+    };
+
+    const fontImportUrl = fontUrls[config.fontFamily] || fontUrls["Inter"];
+
+    let backgroundValue = "";
+    if (config.bgMode === "solid") {
+      backgroundValue = config.bgColor;
+    } else {
+      const gStart = config.gradientStart;
+      const gEnd = config.gradientEnd;
+      if (config.gradientType === "linear-r") {
+        backgroundValue = `linear-gradient(to right, ${gStart}, ${gEnd})`;
+      } else if (config.gradientType === "linear-b") {
+        backgroundValue = `linear-gradient(to bottom, ${gStart}, ${gEnd})`;
+      } else if (config.gradientType === "linear-br") {
+        backgroundValue = `linear-gradient(to bottom right, ${gStart}, ${gEnd})`;
+      } else if (config.gradientType === "radial") {
+        backgroundValue = `radial-gradient(circle, ${gStart}, ${gEnd})`;
+      }
+    }
+
+    let textShadowLine = "";
+    if (config.themePreset === "neon") {
+      textShadowLine = `text-shadow: 0 0 10px ${config.textColor}, 0 0 20px ${config.textColor}, 0 0 30px ${config.textColor};`;
+    } else if (config.themePreset === "led") {
+      textShadowLine = "text-shadow: 0 0 4px rgba(255, 0, 0, 0.6), 0 0 10px rgba(255, 0, 0, 0.4);";
+    }
+
+    const boldWeight = config.bold ? "bold" : "normal";
+    const italicStyle = config.italic ? "italic" : "normal";
+    const animName = config.direction === "right" ? "scroll-right" : "scroll-left";
+    const speedSeconds = speedToSecondsMap[config.speedRating];
+
+    const safeText = config.text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Running Text - Saved Widget</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="${fontImportUrl}" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: ${backgroundValue};
+    }
+    .marquee-container {
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      position: relative;
+    }
+    .marquee-text {
+      display: inline-block;
+      white-space: nowrap;
+      padding-left: 100%;
+      font-size: ${config.fontSize}px;
+      color: ${config.textColor};
+      font-family: '${config.fontFamily}', sans-serif;
+      animation: ${animName} ${speedSeconds}s linear infinite;
+      font-weight: ${boldWeight};
+      font-style: ${italicStyle};
+      ${textShadowLine}
+    }
+    @keyframes scroll-left {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-100%, 0, 0); }
+    }
+    @keyframes scroll-right {
+      0% { transform: translate3d(-100%, 0, 0); }
+      100% { transform: translate3d(0, 0, 0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="marquee-container">
+    <div class="marquee-text">${safeText}</div>
+  </div>
+</body>
+</html>`;
   }
 
-  // =========================
-  // Boot
-  // =========================
-  sync();
-  loop();
+  // Clipboard Copier
+  btnCopy.addEventListener("click", () => {
+    const fullHtmlCode = getDynamicHTMLBundle();
+    navigator.clipboard.writeText(fullHtmlCode)
+      .then(() => {
+        copyToast.classList.remove("opacity-0", "translate-y-2", "scale-95");
+        copyToast.classList.add("opacity-100", "translate-y-0", "scale-100");
+        
+        setTimeout(() => {
+          copyToast.classList.add("opacity-0", "translate-y-2", "scale-95");
+          copyToast.classList.remove("opacity-100", "translate-y-0", "scale-100");
+        }, 2200);
+      })
+      .catch(err => {
+        console.error("Failed to copy source files: ", err);
+      });
+  });
+
+  // Serverless API file builder trigger
+  btnDownload.addEventListener("click", async () => {
+    apiErrorAlert.classList.add("hidden");
+    btnDownload.disabled = true;
+    btnDownloadText.textContent = "Generating Widget File...";
+    downloadLoadingSpin.classList.remove("hidden");
+    downloadIcon.classList.add("hidden");
+
+    let backgroundValue = "";
+    if (config.bgMode === "solid") {
+      backgroundValue = config.bgColor;
+    } else {
+      const gStart = config.gradientStart;
+      const gEnd = config.gradientEnd;
+      if (config.gradientType === "linear-r") {
+        backgroundValue = `linear-gradient(to right, ${gStart}, ${gEnd})`;
+      } else if (config.gradientType === "linear-b") {
+        backgroundValue = `linear-gradient(to bottom, ${gStart}, ${gEnd})`;
+      } else if (config.gradientType === "linear-br") {
+        backgroundValue = `linear-gradient(to bottom right, ${gStart}, ${gEnd})`;
+      } else if (config.gradientType === "radial") {
+        backgroundValue = `radial-gradient(circle, ${gStart}, ${gEnd})`;
+      }
+    }
+
+    const payload = {
+      text: config.text,
+      fontFamily: config.fontFamily,
+      fontSize: config.fontSize,
+      textColor: config.textColor,
+      backgroundColor: backgroundValue,
+      speed: speedToSecondsMap[config.speedRating],
+      direction: config.direction,
+      bold: config.bold,
+      italic: config.italic,
+      themePreset: config.themePreset
+    };
+
+    try {
+      const response = await fetch("/api/download", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) throw new Error("API build returned bad status");
+
+      const blob = await response.blob();
+      const rawUrl = window.URL.createObjectURL(blob);
+      const tempDownloadLink = document.createElement("a");
+      tempDownloadLink.href = rawUrl;
+      tempDownloadLink.download = "running-text.html";
+      document.body.appendChild(tempDownloadLink);
+      tempDownloadLink.click();
+      document.body.removeChild(tempDownloadLink);
+      window.URL.revokeObjectURL(rawUrl);
+
+    } catch (error) {
+      console.error("Serverless download builder error: ", error);
+      apiErrorAlert.classList.remove("hidden");
+    } finally {
+      btnDownload.disabled = false;
+      btnDownloadText.textContent = "Download HTML Widget";
+      downloadLoadingSpin.classList.add("hidden");
+      downloadIcon.classList.remove("hidden");
+    }
+  });
+
+  // --- Boot Up Setup & Animation Loops ---
+  syncInputs();
+  livePreviewLoop();
 });

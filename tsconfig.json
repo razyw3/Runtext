@@ -3,26 +3,24 @@
     "target": "ES2022",
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
-
     "module": "ESNext",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "skipLibCheck": true,
-
     "moduleResolution": "bundler",
     "isolatedModules": true,
-
-    "jsx": "react-jsx",
-
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
-
+    "moduleDetection": "force",
     "allowJs": true,
-
-    // 🔥 FIX: lebih aman untuk project Vite
-    "baseUrl": ".",
+    "jsx": "react-jsx",
     "paths": {
-      "@/*": ["src/*"]
-    }
+      "@/*": [
+        "./*"
+      ]
+    },
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   }
 }

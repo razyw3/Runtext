@@ -2,25 +2,19 @@
 <img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
 </div>
 
-# 🚀 RunText Generator (React + Canvas Engine)
+# Run and deploy your AI Studio app
 
-A modern running text generator app with real-time canvas preview, export to video/GIF, and legacy high-performance canvas engine.
+This contains everything you need to run your app locally.
 
----
+View your app in AI Studio: https://ai.studio/apps/bafda0b5-4d50-4331-b289-e566d08da0da
 
-## 📌 Tech Stack
+## Run Locally
 
-- React + TypeScript (Vite)
-- Express (backend API)
-- Canvas API (legacy engine)
-- MediaRecorder API (video export)
-- gifshot (GIF export)
-- TailwindCSS
+**Prerequisites:**  Node.js
 
----
 
-## ⚙️ Run Locally
-
-### 1. Install dependencies
-```bash
-npm install
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`

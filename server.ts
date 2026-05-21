@@ -7,55 +7,20 @@ const PORT = 3000;
 
 app.use(express.json());
 
-/**
- * ======================================
- * API ROUTES (TIDAK DIUBAH)
- * ======================================
- */
+// API Download handler matching Serverless route
 app.post('/api/download', (req: any, res: any) => {
   return downloadHandler(req, res);
 });
 
-/**
- * ======================================
- * STATIC FILES
- * ======================================
- * public = legacy assets (script.js, css)
- */
+// Serve frontend static files from /public directory
 app.use(express.static(path.join(process.cwd(), 'public')));
 
-/**
- * ======================================
- * REACT SUPPORT (IMPORTANT FIX)
- * ======================================
- * Kalau nanti build React ada di /dist
- */
-const distPath = path.join(process.cwd(), 'dist');
-
-app.use(express.static(distPath));
-
-/**
- * ======================================
- * CATCH ALL ROUTE
- * ======================================
- * PRIORITAS: React build dulu, fallback public
- */
+// Catch-all to serve public/index.html
 app.get('*', (req, res) => {
-  const reactIndex = path.join(distPath, 'index.html');
-  const legacyIndex = path.join(process.cwd(), 'public', 'index.html');
-
-  if (require('fs').existsSync(reactIndex)) {
-    return res.sendFile(reactIndex);
-  }
-
-  return res.sendFile(legacyIndex);
+  res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
 });
 
-/**
- * ======================================
- * START SERVER
- * ======================================
- */
+// Run server on standard access port 3000
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

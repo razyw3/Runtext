@@ -1,244 +1,477 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en" class="h-full bg-slate-50 text-slate-800">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>LED Banner Studio</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Fira+Code:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Monoton&family=Outfit:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Press+Start+2P&family=Space+Grotesk:wght@400;500;700&family=Syne:wght@700;800&family=Unbounded:wght@400;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="style.css">
-
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        brand: {
-          primary: "#6366f1",
-          soft: "#f8fafc"
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Running Text Generator - SaaS Live Design Tool</title>
+  <!-- Google Fonts Preconnect and Imports -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Fira+Code:wght@400;700&family=Inter:wght@300;400;500;600;700;800&family=Monoton&family=Outfit:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Press+Start+2P&family=Space+Grotesk:wght@400;500;700&family=Syne:wght@700;800&family=Unbounded:wght@400;700;900&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
         }
-      },
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
       }
     }
-  }
-}
-</script>
+  </script>
 </head>
+<body class="min-h-screen flex flex-col font-sans select-none overflow-x-hidden antialiased bg-slate-50/50 relative">
+  
+  <!-- Luxury Ambient Glow Backdrop Vectors -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-indigo-100 rounded-full blur-[120px] opacity-70"></div>
+    <div class="absolute top-[20%] right-[-200px] w-[500px] h-[500px] bg-purple-50 rounded-full blur-[150px] opacity-60"></div>
+    <div class="absolute bottom-[10%] left-[10%] w-80 h-80 bg-cyan-50/80 rounded-full blur-[100px] opacity-50"></div>
+  </div>
 
-<body class="min-h-screen flex flex-col bg-brand-soft text-slate-800 font-sans">
+  <!-- Sleek SaaS Top Navigation -->
+  <header class="border-b border-slate-200 bg-white/80 backdrop-blur-xl px-6 py-4 sticky top-0 z-50 shadow-sm relative">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-md">
+          <i data-lucide="move-right" class="w-5 h-5 text-white animate-pulse"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold tracking-tight text-slate-900">
+            Running Text Generator
+          </h1>
+          <p class="text-[10px] text-indigo-600/70 font-semibold tracking-wider font-mono uppercase">
+            DESIGN, PREVIEW & DEPLOY INSTANT MARQUEES
+          </p>
+        </div>
+      </div>
+      
+      <!-- Badges or Info -->
+      <div class="flex items-center gap-2">
+        <span class="px-2.5 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 rounded-full flex items-center gap-1.5 shadow-sm">
+          <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+          Vercel Deploy Ready
+        </span>
+        <span class="px-2.5 py-1 text-xs font-semibold bg-indigo-500/10 text-indigo-600 border border-indigo-500/20 rounded-full flex items-center gap-1 shadow-sm">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Custom Theme Preset Support
+        </span>
+      </div>
+    </div>
+  </header>
 
-<!-- Background (lebih subtle, tidak terlalu “AI glow”) -->
-<div class="fixed inset-0 -z-10 pointer-events-none opacity-40">
-  <div class="absolute -top-32 -left-32 w-72 h-72 bg-indigo-200 blur-[120px] rounded-full"></div>
-  <div class="absolute bottom-0 right-0 w-96 h-96 bg-purple-100 blur-[140px] rounded-full"></div>
-</div>
-
-<!-- HEADER -->
-<header class="border-b bg-white/80 backdrop-blur px-6 py-4 sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto flex justify-between items-center gap-4">
+  <!-- Main Workspace -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start relative z-10">
     
-    <div>
-      <h1 class="text-lg font-semibold text-slate-900">
-        LED Banner Studio
-      </h1>
-      <p class="text-[11px] text-slate-400">
-        Create, preview, and export running text
-      </p>
-    </div>
+    <!-- Left Hand: Configuration Panel (Span 5) -->
+    <div class="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
+      
+      <!-- Preset Themes Section -->
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+          <i data-lucide="palette" class="w-4 h-4 text-indigo-500"></i> Preset Themes
+        </label>
+        <div class="grid grid-cols-3 gap-2">
+          <!-- Neon -->
+          <button id="preset-neon" class="px-3 py-2.5 rounded-xl border border-pink-200 bg-pink-50/40 text-pink-600 text-xs font-semibold text-center transition-all duration-300 hover:bg-pink-50 hover:border-pink-300 active:translate-y-0 cursor-pointer flex flex-col items-center gap-1.5 shadow-sm">
+            <span class="h-3 w-3 rounded-full bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.4)]"></span>
+            Neon Pulse
+          </button>
+          <!-- LED Matrix -->
+          <button id="preset-led" class="px-3 py-2.5 rounded-xl border border-red-200 bg-red-50/40 text-red-600 text-xs font-semibold text-center transition-all duration-300 hover:bg-red-50/60 hover:border-red-300 active:translate-y-0 cursor-pointer flex flex-col items-center gap-1.5 shadow-sm">
+            <span class="h-3 w-3 rounded bg-red-600 shadow-[0_0_6px_rgba(220,38,38,0.4)]"></span>
+            LED Matrix
+          </button>
+          <!-- Dark Elegant -->
+          <button id="preset-dark" class="px-3 py-2.5 rounded-xl border border-indigo-200 bg-indigo-50/40 text-indigo-600 text-xs font-semibold text-center transition-all duration-300 hover:bg-indigo-50/80 hover:border-indigo-300 active:translate-y-0 cursor-pointer flex flex-col items-center gap-1.5 shadow-sm">
+            <span class="h-3 w-3 rounded-full bg-indigo-500 shadow-[0_0_5px_rgba(99,102,241,0.4)]"></span>
+            Cosmic Slate
+          </button>
+        </div>
+      </div>
+      
+      <hr class="border-slate-100">
 
-    <div class="flex items-center gap-2">
-      <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-md">
-        ready
-      </span>
-      <span class="px-2 py-1 text-xs bg-indigo-100 text-indigo-600 rounded-md">
-        presets
-      </span>
-    </div>
+      <!-- Text Inputs & Content -->
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between items-center mb-1.5">
+            <label for="text-input" class="block text-xs font-bold uppercase tracking-wider text-slate-400">
+              Running Message Text
+            </label>
+            <span id="char-counter" class="text-[10px] text-slate-400 font-mono font-bold">0 chars</span>
+          </div>
+          <textarea id="text-input" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-850 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition resize-none placeholder-slate-400 font-medium" placeholder="Type your text animation message here..."></textarea>
+        </div>
+        
+        <!-- Typography Options -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="font-select" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+              Font Family
+            </label>
+            <select id="font-select" class="w-full bg-slate-50 select-style border border-slate-200 rounded-xl px-3 py-2 text-slate-700 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+              <optgroup label="Modern Sans-Serif">
+                <option value="Inter" selected>Inter (Neo-Grotesque)</option>
+                <option value="Space Grotesk">Space Grotesk (Tech)</option>
+                <option value="Outfit">Outfit (Clean)</option>
+                <option value="Syne">Syne (Wacky Display)</option>
+              </optgroup>
+              <optgroup label="Serif">
+                <option value="Playfair Display">Playfair Display (Editorial)</option>
+              </optgroup>
+              <optgroup label="Monospace / Retro">
+                <option value="Fira Code">Fira Code (Developer)</option>
+                <option value="Press Start 2P">Press Start 2P (Pixel LED)</option>
+                <option value="Unbounded">Unbounded (Ultra Wide)</option>
+              </optgroup>
+              <optgroup label="Decorative">
+                <option value="Bungee">Bungee (Bold Poster)</option>
+                <option value="Monoton">Monoton (Fluid Line)</option>
+              </optgroup>
+            </select>
+          </div>
+          
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+              Formatting Options
+            </label>
+            <div class="flex gap-2">
+              <button id="toggle-bold" class="flex-1 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 hover:bg-slate-100 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 text-slate-500 cursor-pointer">
+                <i data-lucide="bold" class="w-3.5 h-3.5"></i> Bold
+              </button>
+              <button id="toggle-italic" class="flex-1 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 hover:bg-slate-100 rounded-xl text-xs font-italic transition flex items-center justify-center gap-1 text-slate-500 cursor-pointer">
+                <i data-lucide="italic" class="w-3.5 h-3.5"></i> Italic
+              </button>
+            </div>
+          </div>
+        </div>
 
-  </div>
-</header>
+        <!-- Slider controls for text size and speed -->
+        <div class="space-y-4 pt-1">
+          <div>
+            <div class="flex justify-between text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+              <span>Text Size</span>
+              <span id="size-value" class="text-indigo-600 font-mono font-bold">48px</span>
+            </div>
+            <input id="size-slider" type="range" min="16" max="300" value="48" class="w-full accent-indigo-600 h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+          </div>
 
-<!-- MAIN -->
-<main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div>
+            <div class="flex justify-between text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+              <span>Animation Speed</span>
+              <span id="speed-value" class="text-indigo-600 font-mono font-bold">Rating: 5 (12s)</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-[10px] uppercase font-bold text-slate-400">Slower</span>
+              <input id="speed-slider" type="range" min="1" max="10" value="5" class="w-full accent-indigo-600 h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+              <span class="text-[10px] uppercase font-bold text-slate-400">Faster</span>
+            </div>
+          </div>
 
-<!-- LEFT PANEL -->
-<div class="lg:col-span-5 bg-white border rounded-xl p-6 space-y-6">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+              Scroll Direction
+            </label>
+            <div class="grid grid-cols-2 gap-2 bg-slate-50 p-1 border border-slate-200 rounded-xl">
+              <button id="dir-left" class="py-1.5 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer">
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Move Left
+              </button>
+              <button id="dir-right" class="py-1.5 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer">
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i> Move Right
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <!-- PRESETS -->
-  <div>
-    <label class="text-xs font-medium text-slate-400 mb-2 block">
-      Preset
-    </label>
+      <hr class="border-slate-100">
 
-    <div class="grid grid-cols-3 gap-2">
-      <button id="preset-neon" class="px-3 py-2 border rounded-lg text-xs bg-pink-50 text-pink-600">
-        Neon
-      </button>
+      <!-- Colors & Aesthetic Section -->
+      <div class="space-y-4">
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400">
+          Color Profiles
+        </label>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Text Color -->
+          <div class="space-y-1.5">
+            <span class="text-[11px] font-semibold text-slate-500">Text color (Hex)</span>
+            <div class="flex gap-2 items-center">
+              <div class="relative w-10 h-10 rounded-xl overflow-hidden cursor-pointer border border-slate-200 shrink-0 shadow-sm">
+                <input type="color" id="text-color-picker" value="#ffffff" class="absolute -inset-2 w-[200%] h-[200%] cursor-pointer border-none bg-none p-0 outline-none">
+              </div>
+              <input type="text" id="text-color-input" value="#ffffff" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 text-xs font-mono uppercase focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
+            </div>
+          </div>
 
-      <button id="preset-led" class="px-3 py-2 border rounded-lg text-xs bg-red-50 text-red-600">
-        LED
-      </button>
+          <!-- Background Color -->
+          <div class="space-y-1.5">
+            <span class="text-[11px] font-semibold text-slate-500">Background mode</span>
+            <div class="grid grid-cols-2 gap-1 bg-slate-50 p-1 border border-slate-200 rounded-xl">
+              <button id="bg-mode-solid" class="py-1.5 text-[10px] font-semibold rounded-lg transition-all cursor-pointer">Solid</button>
+              <button id="bg-mode-gradient" class="py-1.5 text-[10px] font-semibold rounded-lg transition-all cursor-pointer">Gradient</button>
+            </div>
+          </div>
+        </div>
 
-      <button id="preset-dark" class="px-3 py-2 border rounded-lg text-xs bg-indigo-50 text-indigo-600">
-        Dark
-      </button>
-    </div>
-  </div>
+        <!-- Solid Bg Controls -->
+        <div id="solid-bg-section" class="space-y-1.5">
+          <span class="text-[11px] font-semibold text-slate-500">Background Color (Hex)</span>
+          <div class="flex gap-2 items-center">
+            <div class="relative w-10 h-10 rounded-xl overflow-hidden cursor-pointer border border-slate-200 shrink-0 shadow-sm">
+              <input type="color" id="bg-color-picker" value="#111827" class="absolute -inset-2 w-[200%] h-[200%] cursor-pointer border-none bg-none p-0 outline-none">
+            </div>
+            <input type="text" id="bg-color-input" value="#111827" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 text-xs font-mono uppercase focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
+          </div>
+        </div>
 
-  <hr>
-
-  <!-- TEXT -->
-  <div>
-    <div class="flex justify-between text-xs text-slate-400 mb-1">
-      <span>Text</span>
-      <span id="char-counter">0</span>
-    </div>
-
-    <textarea id="text-input" rows="3"
-      class="w-full bg-slate-50 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
-      placeholder="Type your message..."></textarea>
-  </div>
-
-  <!-- TYPO -->
-  <div class="grid grid-cols-2 gap-4">
-
-    <div>
-      <label class="text-xs text-slate-400">Font</label>
-      <select id="font-select"
-        class="w-full mt-1 bg-slate-50 border rounded-lg px-2 py-2 text-sm">
-        <option value="Inter">Inter</option>
-        <option value="Space Grotesk">Space Grotesk</option>
-        <option value="Outfit">Outfit</option>
-        <option value="Syne">Syne</option>
-        <option value="Playfair Display">Playfair</option>
-        <option value="Fira Code">Fira Code</option>
-        <option value="Press Start 2P">Pixel</option>
-      </select>
-    </div>
-
-    <div class="flex gap-2 items-end">
-      <button id="toggle-bold" class="flex-1 border rounded-lg py-2 text-xs">Bold</button>
-      <button id="toggle-italic" class="flex-1 border rounded-lg py-2 text-xs">Italic</button>
-    </div>
-
-  </div>
-
-  <!-- SIZE -->
-  <div>
-    <div class="flex justify-between text-xs text-slate-400 mb-1">
-      <span>Size</span>
-      <span id="size-value">48px</span>
-    </div>
-    <input id="size-slider" type="range" min="16" max="300" value="48" class="w-full">
-  </div>
-
-  <!-- SPEED -->
-  <div>
-    <div class="flex justify-between text-xs text-slate-400 mb-1">
-      <span>Speed</span>
-      <span id="speed-value">5</span>
-    </div>
-    <input id="speed-slider" type="range" min="1" max="10" value="5" class="w-full">
-  </div>
-
-  <!-- DIRECTION -->
-  <div>
-    <label class="text-xs text-slate-400 block mb-1">Direction</label>
-    <div class="grid grid-cols-2 gap-2">
-      <button id="dir-left" class="border rounded-lg py-2 text-xs">Left</button>
-      <button id="dir-right" class="border rounded-lg py-2 text-xs">Right</button>
-    </div>
-  </div>
-
-  <hr>
-
-  <!-- COLORS -->
-  <div class="space-y-4">
-
-    <div>
-      <label class="text-xs text-slate-400">Text color</label>
-      <input type="color" id="text-color-picker" class="w-full h-10 border rounded-lg">
-    </div>
-
-    <div>
-      <label class="text-xs text-slate-400">Background</label>
-      <input type="color" id="bg-color-picker" class="w-full h-10 border rounded-lg">
-    </div>
-
-  </div>
-
-</div>
-
-<!-- RIGHT -->
-<div class="lg:col-span-7 flex flex-col gap-6">
-
-  <!-- PREVIEW -->
-  <div class="bg-white border rounded-xl p-5">
-
-    <div class="flex justify-between text-xs text-slate-400 mb-2">
-      <span>Preview</span>
-      <span>canvas</span>
-    </div>
-
-    <div id="preview-screen-container"
-      class="relative h-64 rounded-xl overflow-hidden bg-black">
-
-      <canvas id="preview-canvas"
-        class="w-full h-full"></canvas>
-
-      <div class="absolute top-3 left-3 flex gap-2">
-        <button id="preview-control" class="bg-black/80 text-white text-xs px-2 py-1 rounded">
-          Pause
-        </button>
-        <button id="preview-fullscreen" class="bg-black/80 text-white text-xs px-2 py-1 rounded">
-          Full
-        </button>
+        <!-- Gradient Bg Controls -->
+        <div id="gradient-bg-section" class="space-y-3 hidden">
+          <!-- Gradient Direction & Stops -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <span class="text-[11px] font-semibold text-slate-400 block mb-1">Color 1 (Start)</span>
+              <div class="flex gap-1.5 items-center">
+                <div class="relative w-8 h-8 rounded-lg overflow-hidden border border-slate-200 shrink-0">
+                  <input type="color" id="gradient-start-picker" value="#4f46e5" class="absolute -inset-2 w-[200%] h-[200%] cursor-pointer">
+                </div>
+                <input type="text" id="gradient-start-input" value="#4f46e5" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-slate-800 text-xs font-mono uppercase">
+              </div>
+            </div>
+            <div>
+              <span class="text-[11px] font-semibold text-slate-400 block mb-1">Color 2 (End)</span>
+              <div class="flex gap-1.5 items-center">
+                <div class="relative w-8 h-8 rounded-lg overflow-hidden border border-slate-200 shrink-0">
+                  <input type="color" id="gradient-end-picker" value="#0891b2" class="absolute -inset-2 w-[200%] h-[200%] cursor-pointer">
+                </div>
+                <input type="text" id="gradient-end-input" value="#0891b2" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-slate-800 text-xs font-mono uppercase">
+              </div>
+            </div>
+          </div>
+          <div>
+            <span class="text-[11px] font-semibold text-slate-400 block mb-1">Gradient Pattern</span>
+            <div class="grid grid-cols-4 gap-1 bg-slate-50 p-1 border border-slate-200 rounded-xl text-center">
+              <button id="grad-dir-r" class="py-1 text-[10px] font-semibold rounded-md cursor-pointer">👉 Horiz</button>
+              <button id="grad-dir-b" class="py-1 text-[10px] font-semibold rounded-md cursor-pointer">👇 Vert</button>
+              <button id="grad-dir-br" class="py-1 text-[10px] font-semibold rounded-md cursor-pointer">📐 Diag</button>
+              <button id="grad-radial" class="py-1 text-[10px] font-semibold rounded-md cursor-pointer">🎯 Radial</button>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
 
-    <div class="flex justify-between text-xs text-slate-400 mt-3">
-      <span>Responsive</span>
-      <button id="btn-reset" class="underline">reset</button>
+    <!-- Right Hand: Live Preview Board & Code Integration (Span 7) -->
+    <div class="lg:col-span-7 flex flex-col gap-6">
+      
+      <!-- Real-time Live Preview Board -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col gap-4">
+        <div class="flex justify-between items-center">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <i data-lucide="tv" class="w-4 h-4 text-indigo-500 animate-pulse"></i> Real-time Live Monitor
+          </span>
+          <span class="px-2.5 py-1 text-[10px] font-bold font-mono tracking-wide uppercase bg-slate-100 text-slate-500 border border-slate-200 rounded-lg">
+            HTML5 Canvas Engine
+          </span>
+        </div>
+        
+        <!-- Live Preview IFrame Mockup / Output Sandbox (Black Studio Frame) -->
+        <div id="preview-screen-container" class="relative group h-64 rounded-2xl overflow-hidden border-[8px] border-slate-900 shadow-2xl flex items-center justify-center ring-1 ring-slate-200/50">
+          <!-- Floating Play/Pause/Focus Controller overlay top left -->
+          <div class="absolute top-3 left-3 z-10 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button id="preview-control" class="p-1.5 px-3 text-[10px] bg-slate-950/90 hover:bg-black border border-slate-800 text-slate-150 rounded-lg flex items-center gap-1.5 cursor-pointer font-semibold shadow-md active:scale-95 transition">
+              <i data-lucide="pause" class="w-3.5 h-3.5 text-amber-500" id="preview-control-icon"></i>
+              <span id="preview-control-text">Pause Animation</span>
+            </button>
+            <button id="preview-fullscreen" class="p-1.5 px-2.5 text-[10px] bg-slate-950/90 hover:bg-black border border-slate-800 text-slate-150 rounded-lg flex items-center justify-center cursor-pointer shadow-md active:scale-95 transition" title="Toggle Fullscreen">
+              <i data-lucide="maximize" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- HTML5 Canvas rendering target -->
+          <canvas id="preview-canvas" class="w-full h-full object-contain cursor-pointer bg-slate-950"></canvas>
+        </div>
+
+        <!-- Custom Grid Overlay helper or text speed rating slider details -->
+        <div class="flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-2 border-t border-slate-100 pt-4">
+          <div class="flex items-center gap-4 font-medium">
+            <span class="flex items-center gap-1 text-slate-400"><i data-lucide="text-cursor-input" class="w-3.5 h-3.5 text-indigo-500"></i> No Marquee Tag (Smooth Keyframes)</span>
+            <span class="flex items-center gap-1 text-slate-400"><i data-lucide="smartphone" class="w-3.5 h-3.5 text-indigo-500"></i> Fully Responsive</span>
+          </div>
+          <button id="btn-reset" class="px-3.5 py-1.5 text-xs text-slate-500 hover:text-slate-800 bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 rounded-xl font-semibold transition flex items-center gap-1.5 cursor-pointer shadow-sm">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Workspace
+          </button>
+        </div>
+      </div>
+
+      <!-- ADVANCED MEDIA EXPORT PANEL (Video / GIF) -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+        <div class="flex justify-between items-center">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <i data-lucide="video" class="w-4 h-4 text-indigo-500 animate-pulse"></i> Advanced Media Exporter
+          </span>
+          <span class="px-2.5 py-1 text-[10px] font-bold font-mono tracking-wide uppercase bg-indigo-50 text-indigo-600 border border-indigo-100 rounded-lg">
+            Client-Side Render
+          </span>
+        </div>
+
+        <p class="text-xs text-slate-500 leading-relaxed font-semibold">
+          Export your running marquee text as high-definition **WebM video** or highly optimized **GIF animation** directly within your browser.
+        </p>
+
+        <!-- Configuration row -->
+        <div class="grid grid-cols-3 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-150">
+          <div>
+            <label for="export-resolution" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+              Resolution
+            </label>
+            <select id="export-resolution" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-700 outline-none focus:border-indigo-500 transition font-semibold">
+              <option value="480p">480p (SD)</option>
+              <option value="720p" selected>720p (HD)</option>
+              <option value="1080p">1080p (FHD)</option>
+            </select>
+          </div>
+          <div>
+            <label for="export-duration" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+              Duration
+            </label>
+            <select id="export-duration" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-700 outline-none focus:border-indigo-500 transition font-semibold">
+              <option value="3">3 Seconds</option>
+              <option value="5" selected>5 Seconds</option>
+              <option value="10">10 Seconds</option>
+              <option value="15">15 Seconds</option>
+            </select>
+          </div>
+          <div>
+            <label for="export-fps" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+              Frame Rate
+            </label>
+            <select id="export-fps" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-700 outline-none focus:border-indigo-500 transition font-semibold">
+              <option value="15">15 FPS (Lite)</option>
+              <option value="30" selected>30 FPS (HD)</option>
+              <option value="60">60 FPS (Ultra)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Progress and Status Indicator (Hidden by default) -->
+        <div id="export-progress-section" class="hidden space-y-2 border border-slate-200 bg-slate-50 p-4 rounded-xl">
+          <div class="flex justify-between items-center text-xs">
+            <span id="export-status-label" class="font-bold text-slate-705 flex items-center gap-1.5">
+              <svg class="animate-spin h-3.5 w-3.5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Rendering Animation Frames...
+            </span>
+            <span id="export-progress-percent" class="font-mono text-indigo-650 font-extrabold">0%</span>
+          </div>
+          <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden shadow-inner relative">
+            <div id="export-progress-bar" class="bg-indigo-600 h-full rounded-full transition-all duration-100 ease-out" style="width: 0%"></div>
+          </div>
+          <p id="export-helper-tips" class="text-[10px] text-slate-400 italic">
+            Tip: Processing GIFs could take some time for longer duration or high-fps configurations.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Action Button: Download Video -->
+          <button id="btn-export-video" class="group h-13 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-sm active:scale-95">
+            <i data-lucide="video" class="w-4 h-4 text-cyan-400"></i>
+            <span>Download Video (WebM)</span>
+          </button>
+
+          <!-- Action Button: Download GIF -->
+          <button id="btn-export-gif" class="group h-13 rounded-xl border border-slate-200 hover:border-pink-300 bg-slate-50/50 hover:bg-pink-50/20 text-slate-700 hover:text-pink-600 text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-sm active:scale-95">
+            <i data-lucide="image" class="w-4 h-4 text-pink-500"></i>
+            <span>Download Animated GIF</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Code Exporter & Exporter Actions -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="code" class="w-4 h-4 text-indigo-500"></i> Code Sandbox Actions
+        </span>
+
+        <p class="text-xs text-slate-500 leading-relaxed font-medium">
+          Produce standalone running text widgets instantly. You can copy the code snippet directly, or call the serverless back-end API to bundle it in a ready-made download file.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Action Button: Copy bundle -->
+          <button id="btn-copy" class="group h-13 rounded-xl border border-slate-200 hover:border-indigo-300 bg-slate-50/50 hover:bg-indigo-50/20 text-slate-700 hover:text-indigo-600 text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer relative shadow-sm">
+            <i data-lucide="clipboard" class="w-4 h-4 group-hover:scale-110 duration-200"></i>
+            <span>Copy Bundle Code</span>
+            <!-- Inline copy feedback toast -->
+            <span id="copy-toast" class="absolute -top-10 opacity-0 translate-y-2 pointer-events-none transition-all duration-300 scale-95 bg-emerald-600 text-white font-bold text-xs px-3 py-1 rounded-lg flex items-center gap-1 shadow-md">
+              <i data-lucide="check" class="w-3 h-3 stroke-[3]"></i> Copied to Clipboard!
+            </span>
+          </button>
+
+          <!-- Action Button: Download from backend -->
+          <button id="btn-download" class="group h-13 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+            <!-- Loading Indicator -->
+            <svg id="download-loading-spin" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <i id="download-icon" data-lucide="download" class="w-4 h-4 group-hover:translate-y-0.5 duration-200"></i>
+            <span id="btn-download-text">Download HTML Widget</span>
+          </button>
+        </div>
+
+        <div id="api-error-alert" class="hidden p-3 rounded-xl border border-red-200 bg-red-50 text-red-600 text-xs flex items-start gap-2 animate-pulse">
+          <i data-lucide="circle-alert" class="w-4 h-4 shrink-0 mt-0.5"></i>
+          <div>
+            <h5 class="font-bold">Generation Failed</h5>
+            <p class="text-red-500">Could not resolve /api/download. Please ensure the dev server has restarted.</p>
+          </div>
+        </div>
+
+        <!-- Collapsible Raw style inspection -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden bg-slate-50/50">
+          <button id="toggle-raw-code" class="w-full px-4 py-3 text-left hover:bg-slate-100 transition flex items-center justify-between text-xs font-semibold text-slate-500 cursor-pointer">
+            <span class="flex items-center gap-2">
+              <i data-lucide="file-code" class="w-4 h-4 text-indigo-500"></i> Preview CSS Stylesheet Code
+            </span>
+            <i data-lucide="chevron-down" id="raw-code-chevron" class="w-4 h-4 transition duration-200"></i>
+          </button>
+          <div id="raw-code-drawer" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+            <pre class="p-4 overflow-x-auto text-[11px] font-mono bg-slate-900 border-t border-slate-800 text-slate-300"><code id="code-output-inspect">Generating code...</code></pre>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-  </div>
+  </main>
 
-  <!-- EXPORT -->
-  <div class="bg-white border rounded-xl p-5">
-
-    <div class="text-xs text-slate-400 mb-3">
-      Export
+  <footer class="mt-auto border-t border-slate-200 bg-white/80 p-6 text-center text-xs text-slate-400 relative z-10">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 font-medium">
+      <p>Running Text Generator &copy; 2026. Built with modern CSS Keyframes & Serverless Backend.</p>
+      <div class="flex items-center gap-4">
+        <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" class="hover:text-slate-600 transition">Deploy on Vercel</a>
+        <span>&bull;</span>
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="hover:text-slate-600 transition">GitHub Repo</a>
+      </div>
     </div>
+  </footer>
 
-    <div class="grid grid-cols-3 gap-2">
-      <button id="download-html" class="bg-slate-900 text-white py-2 rounded-lg text-xs">
-        HTML
-      </button>
-
-      <button id="download-video" class="bg-indigo-600 text-white py-2 rounded-lg text-xs">
-        Video
-      </button>
-
-      <button id="download-gif" class="bg-green-600 text-white py-2 rounded-lg text-xs">
-        GIF
-      </button>
-    </div>
-
-  </div>
-
-</div>
-
-</main>
-<script src="/script.js" defer></script>
-<script type="module" src="/src/main.tsx"></script>
+  <!-- Lucide Script -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Gifshot Library CDN for Animated GIF Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gifshot/0.4.5/gifshot.min.js"></script>
+  <!-- Main Script -->
+  <script src="script.js"></script>
 </body>
 </html>
