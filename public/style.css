@@ -1,0 +1,107 @@
+/* =========================
+   Scrollbar Styling
+========================= */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* =========================
+   Range Input (Slider)
+========================= */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: #6366f1;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+  cursor: pointer;
+  transition: transform 0.1s ease, background-color 0.1s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  background: #818cf8;
+}
+
+/* =========================
+   Select Dropdown Styling
+========================= */
+.select-style {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-size: 1.25rem;
+  background-position: right 0.75rem center;
+}
+
+/* =========================
+   Preview Canvas Styling
+========================= */
+#preview-canvas {
+  mask-image: linear-gradient(to right, transparent, white 4%, white 96%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, white 4%, white 96%, transparent);
+}
+
+#preview-screen-container {
+  background-size: 20px 20px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
+
+/* =========================
+   Keyframes (Optional UI use)
+========================= */
+@keyframes preview-scroll-left {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-100%, 0, 0); }
+}
+
+@keyframes preview-scroll-right {
+  from { transform: translate3d(-100%, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+
+/* =========================
+   Button Effects
+========================= */
+#btn-download {
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+}
+
+#btn-download:hover {
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+}
+
+/* =========================
+   Utility Classes
+========================= */
+.font-bold {
+  font-weight: 700 !important;
+}
+
+.font-italic {
+  font-style: italic !important;
+}

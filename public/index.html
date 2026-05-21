@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>LED Banner Studio</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Fira+Code:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Monoton&family=Outfit:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Press+Start+2P&family=Space+Grotesk:wght@400;500;700&family=Syne:wght@700;800&family=Unbounded:wght@400;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          primary: "#6366f1",
+          soft: "#f8fafc"
+        }
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+      }
+    }
+  }
+}
+</script>
+</head>
+
+<body class="min-h-screen flex flex-col bg-brand-soft text-slate-800 font-sans">
+
+<!-- Background (lebih subtle, tidak terlalu “AI glow”) -->
+<div class="fixed inset-0 -z-10 pointer-events-none opacity-40">
+  <div class="absolute -top-32 -left-32 w-72 h-72 bg-indigo-200 blur-[120px] rounded-full"></div>
+  <div class="absolute bottom-0 right-0 w-96 h-96 bg-purple-100 blur-[140px] rounded-full"></div>
+</div>
+
+<!-- HEADER -->
+<header class="border-b bg-white/80 backdrop-blur px-6 py-4 sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto flex justify-between items-center gap-4">
+    
+    <div>
+      <h1 class="text-lg font-semibold text-slate-900">
+        LED Banner Studio
+      </h1>
+      <p class="text-[11px] text-slate-400">
+        Create, preview, and export running text
+      </p>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-md">
+        ready
+      </span>
+      <span class="px-2 py-1 text-xs bg-indigo-100 text-indigo-600 rounded-md">
+        presets
+      </span>
+    </div>
+
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+<!-- LEFT PANEL -->
+<div class="lg:col-span-5 bg-white border rounded-xl p-6 space-y-6">
+
+  <!-- PRESETS -->
+  <div>
+    <label class="text-xs font-medium text-slate-400 mb-2 block">
+      Preset
+    </label>
+
+    <div class="grid grid-cols-3 gap-2">
+      <button id="preset-neon" class="px-3 py-2 border rounded-lg text-xs bg-pink-50 text-pink-600">
+        Neon
+      </button>
+
+      <button id="preset-led" class="px-3 py-2 border rounded-lg text-xs bg-red-50 text-red-600">
+        LED
+      </button>
+
+      <button id="preset-dark" class="px-3 py-2 border rounded-lg text-xs bg-indigo-50 text-indigo-600">
+        Dark
+      </button>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- TEXT -->
+  <div>
+    <div class="flex justify-between text-xs text-slate-400 mb-1">
+      <span>Text</span>
+      <span id="char-counter">0</span>
+    </div>
+
+    <textarea id="text-input" rows="3"
+      class="w-full bg-slate-50 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+      placeholder="Type your message..."></textarea>
+  </div>
+
+  <!-- TYPO -->
+  <div class="grid grid-cols-2 gap-4">
+
+    <div>
+      <label class="text-xs text-slate-400">Font</label>
+      <select id="font-select"
+        class="w-full mt-1 bg-slate-50 border rounded-lg px-2 py-2 text-sm">
+        <option value="Inter">Inter</option>
+        <option value="Space Grotesk">Space Grotesk</option>
+        <option value="Outfit">Outfit</option>
+        <option value="Syne">Syne</option>
+        <option value="Playfair Display">Playfair</option>
+        <option value="Fira Code">Fira Code</option>
+        <option value="Press Start 2P">Pixel</option>
+      </select>
+    </div>
+
+    <div class="flex gap-2 items-end">
+      <button id="toggle-bold" class="flex-1 border rounded-lg py-2 text-xs">Bold</button>
+      <button id="toggle-italic" class="flex-1 border rounded-lg py-2 text-xs">Italic</button>
+    </div>
+
+  </div>
+
+  <!-- SIZE -->
+  <div>
+    <div class="flex justify-between text-xs text-slate-400 mb-1">
+      <span>Size</span>
+      <span id="size-value">48px</span>
+    </div>
+    <input id="size-slider" type="range" min="16" max="300" value="48" class="w-full">
+  </div>
+
+  <!-- SPEED -->
+  <div>
+    <div class="flex justify-between text-xs text-slate-400 mb-1">
+      <span>Speed</span>
+      <span id="speed-value">5</span>
+    </div>
+    <input id="speed-slider" type="range" min="1" max="10" value="5" class="w-full">
+  </div>
+
+  <!-- DIRECTION -->
+  <div>
+    <label class="text-xs text-slate-400 block mb-1">Direction</label>
+    <div class="grid grid-cols-2 gap-2">
+      <button id="dir-left" class="border rounded-lg py-2 text-xs">Left</button>
+      <button id="dir-right" class="border rounded-lg py-2 text-xs">Right</button>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- COLORS -->
+  <div class="space-y-4">
+
+    <div>
+      <label class="text-xs text-slate-400">Text color</label>
+      <input type="color" id="text-color-picker" class="w-full h-10 border rounded-lg">
+    </div>
+
+    <div>
+      <label class="text-xs text-slate-400">Background</label>
+      <input type="color" id="bg-color-picker" class="w-full h-10 border rounded-lg">
+    </div>
+
+  </div>
+
+</div>
+
+<!-- RIGHT -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+
+  <!-- PREVIEW -->
+  <div class="bg-white border rounded-xl p-5">
+
+    <div class="flex justify-between text-xs text-slate-400 mb-2">
+      <span>Preview</span>
+      <span>canvas</span>
+    </div>
+
+    <div id="preview-screen-container"
+      class="relative h-64 rounded-xl overflow-hidden bg-black">
+
+      <canvas id="preview-canvas"
+        class="w-full h-full"></canvas>
+
+      <div class="absolute top-3 left-3 flex gap-2">
+        <button id="preview-control" class="bg-black/80 text-white text-xs px-2 py-1 rounded">
+          Pause
+        </button>
+        <button id="preview-fullscreen" class="bg-black/80 text-white text-xs px-2 py-1 rounded">
+          Full
+        </button>
+      </div>
+
+    </div>
+
+    <div class="flex justify-between text-xs text-slate-400 mt-3">
+      <span>Responsive</span>
+      <button id="btn-reset" class="underline">reset</button>
+    </div>
+
+  </div>
+
+  <!-- EXPORT -->
+  <div class="bg-white border rounded-xl p-5">
+
+    <div class="text-xs text-slate-400 mb-3">
+      Export
+    </div>
+
+    <div class="grid grid-cols-3 gap-2">
+      <button id="download-html" class="bg-slate-900 text-white py-2 rounded-lg text-xs">
+        HTML
+      </button>
+
+      <button id="download-video" class="bg-indigo-600 text-white py-2 rounded-lg text-xs">
+        Video
+      </button>
+
+      <button id="download-gif" class="bg-green-600 text-white py-2 rounded-lg text-xs">
+        GIF
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+</main>
+
+<script type="module" src="/src/main.tsx"></script>
+<script src="/script.js" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "Running Text Generator",
+  "description": "An elegant, interactive SaaS-style web application to generate and download customized smooth running texts with real-time previews.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
